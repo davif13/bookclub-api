@@ -17,6 +17,14 @@ class UserController {
           .min(6, "Password should have 6 or more characters."),
       });
 
+      const userExists = await User.findOne({
+        where: { email: req.body.email },
+      });
+
+      if (userExists) {
+        return res.status(400).json({ error: "E-mail already exists." });
+      }
+
       await schema.validate(req.body);
 
       const hashPassword = await bcrypt.hash(req.body.password, 8);
