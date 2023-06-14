@@ -18,7 +18,7 @@ class UserController {
       const user = await User.findOne({ where: { email: req.body.email } });
 
       if (!user) {
-        return res.status(401).json({ error: "Incorrect user or password." });
+        return res.status(401).json({ error: "Incorrect email or password." });
       }
 
       const checkPassword = await bcrypt.compare(
@@ -27,7 +27,7 @@ class UserController {
       );
 
       if (!checkPassword) {
-        return res.status(401).json({ error: "Incorrect user or password." });
+        return res.status(401).json({ error: "Incorrect email or password." });
       }
 
       const token = jwt.sign({ id: user.id }, process.env.JWT_HASH, {
@@ -88,6 +88,26 @@ class UserController {
       return res.status(400).json({ error: error?.message });
     }
   }
+
+  async getUser(req, res) {
+    try {
+      if (!req.userId) {
+        return res.status(400).json({ error: "Id not provided." });
+      }
+
+      const user = await User.findOne({ where: { id: Number(req.userId) } });
+
+      if (!user) {
+        return res.status(404).json({ error: "User not found." });
+      }
+
+      return res.status(200).json(user);
+    } catch (error) {
+      return res.status(400).json({ error: error?.message });
+    }
+  }
+
+  async forgotPassword(req, res) {}
 }
 
 export default new UserController();
