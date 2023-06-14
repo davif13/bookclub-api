@@ -2,6 +2,7 @@ import express from "express";
 import db from "./src/models";
 import UserController from "./src/controllers/user";
 const app = express();
+app.use(express.json());
 const port = 3333;
 
 app.post("/", UserController.create);

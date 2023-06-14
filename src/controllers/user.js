@@ -1,20 +1,38 @@
 import { User } from "../models";
+import * as Yup from "yup";
+import bcrypt from "bcrypt";
 
 class UserController {
   async create(req, res) {
-    const user = new User({
-      name: "Davi",
-      email: "davi.ffa@gmail.com",
-      password: "teste@123",
-      password_hash: "teste@123",
-      reset_password_token: "teste",
-      reset_password_token_sent_at: new Date(),
-      avatar_url: "teste_url",
-    });
+    try {
+      const schema = Yup.object().shape({
+        name: Yup.string()
+          .required("Name is mandatory.")
+          .min(3, "Name should have 3 or more characters."),
+        email: Yup.string()
+          .email("Invalid e-mail.")
+          .required("E-mail is mandatory."),
+        password: Yup.string()
+          .required("Password is mandatory.")
+          .min(6, "Password should have 6 or more characters."),
+      });
 
-    await user.save();
+      await schema.validate(req.body);
 
-    return res.json({ user });
+      const hashPassword = await bcrypt.hash(req.body.password, 8);
+
+      const user = new User({
+        ...req.body,
+        password: "",
+        password_hash: hashPassword,
+      });
+
+      await user.save();
+
+      return res.json({ user });
+    } catch (error) {
+      return res.status(400).json({ error: error?.message });
+    }
   }
 }
 
