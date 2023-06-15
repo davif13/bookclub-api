@@ -25,7 +25,7 @@ class AuthorController {
     }
   }
 
-  async findAll(req, res) {
+  async getAll(req, res) {
     try {
       const authors = await Author.findAll({
         order: [["name", "ASC"]],
