@@ -197,6 +197,8 @@ class UserController {
         reset_password_token: null,
         reset_password_sent_at: null,
       });
+
+      return res.status(200).json({ success: true });
     } catch (error) {
       return res.status(400).json({ error: error?.message });
     }
