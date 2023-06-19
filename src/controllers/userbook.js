@@ -1,4 +1,4 @@
-import { User, Book, UserBook } from "../models";
+import { User, Book, UserBook, Author } from "../models";
 import * as Yup from "yup";
 
 class UserBookController {
@@ -53,6 +53,7 @@ class UserBookController {
           user_id: req.userId,
         },
         include: [{ model: Book, as: "book" }],
+        include: [{ model: Author, as: "author", attributes: ["name"] }],
       });
 
       return res.status(200).json(userbooks);

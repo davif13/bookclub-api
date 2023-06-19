@@ -46,16 +46,30 @@ class BookController {
   }
 
   async getAll(req, res) {
+    const { highlighted, category_id } = req.query;
     try {
+      const where = {};
+
+      if (highlighted) {
+        where.highlighted = true;
+      }
+
+      if (category_id) {
+        where.category_id = Number(category_id);
+      }
+
       const books = await Book.findAll({
+        where,
         include: [
           {
             model: Author,
             as: "author",
+            attributes: ["name"],
           },
           {
             model: Category,
             as: "category",
+            attributes: ["name"],
           },
         ],
       });
