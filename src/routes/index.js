@@ -18,6 +18,8 @@ routes.post("/reset-password", UserController.resetPassword);
 routes.use(authMiddleware);
 routes.get("/user", UserController.getUser);
 routes.get("/category", CategoryController.getAll);
+routes.put("/user", UserController.update);
+routes.put("/user/avatar", UserController.updateAvatar);
 
 routes.post("/author", AuthorController.create);
 routes.get("/author", AuthorController.getAll);
